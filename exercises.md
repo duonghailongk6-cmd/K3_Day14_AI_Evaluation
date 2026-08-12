@@ -30,11 +30,11 @@ critical.
 
 | Metric | Acceptable Low Score Scenario | Critical Low Score Scenario | Action Required |
 |---|---|---|---|
-| Faithfulness | | | |
-| Answer Relevance | | | |
-| Context Recall | | | |
-| Context Precision | | | |
-| Completeness | | | |
+| Faithfulness | Điểm thấp có thể chấp nhận nếu lỗi nhỏ không ảnh hưởng đến ý chính | Điểm thấp là critical nếu thông tin sai lệch, bịa đặt, hoặc gây hiểu nhầm nghiêm trọng| Kiểm tra nguồn, sửa nội dung sai, đảm bảo tính chính xác|
+| Answer Relevance | Có thể chấp nhận nếu câu trả lời hơi lệch trọng tâm nhưng vẫn hữu ích| Critical nếu câu trả lời hoàn toàn không liên quan đến câu hỏi hoặc gây nhiễu | Điều chỉnh để bám sát câu hỏi, loại bỏ nội dung ngoài lề. |
+| Context Recall | Chấp nhận nếu bỏ sót chi tiết nhỏ trong ngữ cảnh nhưng vẫn giữ được mạch chính. | Critical nếu quên mất thông tin quan trọng từ ngữ cảnh trước hoặc làm sai lệch| Critical nếu quên mất thông tin quan trọng từ ngữ cảnh trước, làm sai lệch |
+| Context Precision | Có thể chấp nhận nếu hơi dư thừa thông tin nhưng không gây nhầm lẫn.| Critical nếu đưa thông tin sai hoặc nhầm lẫn từ ngữ cảnh| Tinh chỉnh để chỉ lấy đúng thông tin cần thiết từ ngữ cảnh|
+| Completeness | Chấp nhận nếu thiếu một phần nhỏ nhưng vẫn đủ để người đọc hiểu ý chính. | Critical nếu bỏ sót phần quan trọng, khiến câu trả lời không đầy đủ| Bổ sung các phần còn thiếu|
 
 ### Exercise 1.2 — Bias trong LLM-as-a-Judge
 
@@ -46,15 +46,17 @@ Ba bias thường gặp:
 
 **Câu 1: Thiết kế experiment phát hiện position bias với ít nhất hai conditions.**
 
-> *Câu trả lời:*
+> *Cho judge đánh giá hai câu trả lời có chất lượng tương đương nhưng đổi chỗ. Nếu kết quả đánh giá thay đổi đáng kể chỉ vì vị trí, đó là dấu hiệu của position bias.*
+
+> *Giữ nguyên thứ tự. So sánh kết quả với diieeuf kiện 1*
 
 **Câu 2: Làm thế nào giảm verbosity bias bằng rubric design?**
 
-> *Câu trả lời:*
+> *Tách rõ tiêu chí chất lượng và độ dài.*
 
 **Câu 3: Tại sao cần calibrate LLM judge với human labels?**
 
-> *Câu trả lời:*
+> *Đảm bảo tính chuẩn xác và đáng tin cậy. Phát hiện và điều chỉnh bias.*
 
 ### Exercise 1.3 — Evaluation trong CI/CD
 
