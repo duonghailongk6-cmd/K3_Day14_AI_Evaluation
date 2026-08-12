@@ -41,12 +41,12 @@ template = _m
 
 def _make_qa(question: str = "What is AI?",
              expected: str = "AI is artificial intelligence",
-             context: str = "AI stands for artificial intelligence") -> QAPair:
+             context: str = "AI stands for artificial intelligence") -> QAPair: # type: ignore
     return QAPair(question=question, expected_answer=expected, context=context)
 
 
 def _make_eval_result(faithfulness: float = 0.8, relevance: float = 0.8,
-                      completeness: float = 0.8, failure_type: str | None = None) -> EvalResult:
+                      completeness: float = 0.8, failure_type: str | None = None) -> EvalResult: # type: ignore
     qa = _make_qa()
     passed = faithfulness >= 0.5 and relevance >= 0.5 and completeness >= 0.5
     return EvalResult(
