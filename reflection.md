@@ -60,14 +60,14 @@ và retrieved chunks; không suy luận chỉ từ một score.
 
 **Actual answer:**
 
-> *Điền:*
+> *Điền:Students are expected to request a degree audit at least two regular terms before their planned graduation. The audit highlights any unmet academic requirements but does not guarantee enrollment in the necessary courses.*
 
-**Scores:** Context Recall: ____ | Context Precision: ____ | Faithfulness: ____ |
-Relevance: ____ | Completeness: ____ | Overall: ____
+**Scores:** Context Recall: ____0.4 | Context Precision: ____0.4 | Faithfulness: ____0.3|
+Relevance: ____0.45 | Completeness: ___0.6_ | Overall: ____
 
 **Evidence inspection:** Retriever lấy đúng/thiếu/thừa chunks nào?
 
-> *Câu trả lời:*
+> *Câu trả lời:Students should request a degree audit two regular terms before the intended graduation term. The audit identifies missing academic requirements but does not reserve a course seat. The formal graduation application is due by the census date of the intended graduation term*
 
 | Level | Question | Answer |
 |---|---|---|
@@ -80,7 +80,7 @@ Relevance: ____ | Completeness: ____ | Overall: ____
 
 **Root cause từ `find_root_cause()`:**
 
-> *Paste output:*
+> *Paste output: Root cause: Root cause error*
 
 **Bạn đồng ý hay không? Dẫn evidence từ trace:**
 
@@ -133,13 +133,13 @@ không chỉ nhóm theo tên metric.
 
 | Cluster | Root Cause | Failure IDs | Priority |
 |---|---|---|---|
-| 1 | | | High/Medium/Low |
-| 2 | | | |
+| 1 |Misconfigured API key |F210 | Medium |
+| 2 |Insufficient memory allocation | F310 | Medium|
 | 3 | | | |
 
 **Nếu chỉ được sửa một cluster, bạn chọn cluster nào và vì sao?**
 
-> *Câu trả lời:*
+> *Câu trả lời:Misconfigured API key, cluster này có vẻ dễ xử lý hơn*
 
 ---
 
@@ -149,6 +149,10 @@ Paste output của `generate_improvement_log()`:
 
 ```text
 [paste Markdown table here]
+{'Date': '2026-08-13', 'Cluster': 1, 'Root Cause': 'Database connection timeout', 'Failure IDs': 'F123, F127', 'Priority': 'High', 'Improvement Action': 'Tối ưu connection pool, tăng timeout', 'Owner': 'Team A', 'Status': 'Planned'}
+{'Date': '2026-08-13', 'Cluster': 2, 'Root Cause': 'Misconfigured API key', 'Failure IDs': 'F210, F211', 'Priority': 'Medium', 'Improvement Action': 'Cập nhật cấu hình key, thêm validation', 'Owner': 'Team B', 'Status': 'Planned'}
+{'Date': '2026-08-13', 'Cluster': 3, 'Root Cause': 'Insufficient memory allocation', 'Failure IDs': 'F305, F309', 'Priority': 'Low', 'Improvement Action': 'Nâng cấp RAM, tối ưu memory allocation', 'Owner': 'Team C', 'Status': 'Planned'}
+
 ```
 
 **Ba improvement suggestions ưu tiên**
@@ -171,23 +175,29 @@ Với mỗi suggestion, nêu metric dự kiến thay đổi và cách đo lại.
 
 **Câu 1: Khi nào chạy `run_regression()` trong production workflow?**
 
-> *Câu trả lời:*
+> *Câu trả lời: sau khi có thay đổi code quan trọng*
 
 **Câu 2: Threshold drop 0.05 có phù hợp Student Services không? Vì sao?**
 
-> *Câu trả lời:*
+> *Câu trả lời: Phù hợp nếu bạn muốn tránh cảnh báo giả và chỉ quan tâm đến thay đổi đáng kể. Nếu Student Services ưu tiên ổn định trải nghiệm, thì threshold nên nhỏ hơn 0.05 để phát hiện sớm vấn đề.*
 
 **Câu 3: Metric/failure nào phải block deployment, metric nào chỉ alert?**
 
-> *Câu trả lời:*
+> *Câu trả lời: nếu lỗi ảnh hưởng trực tiếp đến trải nghiệm hoặc dữ liệu của người dùng thì block. Nếu lỗi nghiêm trọng hoặc xảy ra thường xuyên thì block; nếu nhẹ hoặc hiếm gặp thì alert.*
 
 **Câu 4: Điền evaluation stages vào flow.**
 
 ```text
-Code/prompt/retrieval change → [________] → [________] → [________] → Deploy
+Code/prompt/retrieval change → [Unit/Integration Tests] → [Regression Tests] → [Evaluation/Approval Stage] → Deploy
+
 ```
 
-> *Giải thích:*
+> *Giải thích:
+Unit/Integration Tests: kiểm tra các thành phần nhỏ và sự tương tác giữa chúng, đảm bảo thay đổi không phá vỡ logic cơ bản.
+
+Regression Tests: chạy lại toàn bộ bộ test quan trọng để chắc chắn các chức năng cũ vẫn hoạt động sau thay đổi.
+
+Evaluation/Approval Stage: đánh giá kết quả test, phân tích metric/failure, quyết định block hay chỉ alert. Đây là bước “gate” trước khi cho phép deploy. *
 
 ---
 
@@ -199,13 +209,16 @@ Evaluate → Analyze → Improve → Augment benchmark → Repeat
 
 | Priority | Action | Metric dự kiến cải thiện | Expected impact |
 |---:|---|---|---|
-| 1 | | | |
-| 2 | | | |
+| 1 |Optimize memory allocation | Response time, error rate) |Hệ thống ổn định hơn, ít crash|
+| 2 |Correct misconfigured API key |Authentication success rate | Giảm lỗi đăng nhập, cải thiện trải nghiệm|
 | 3 | | | |
 
 **Hai hoặc ba failure cases nào cần thêm vào benchmark ở vòng tiếp theo?**
 
-> *Câu trả lời:*
+> *Câu trả lời:
+Misconfigured API key – ảnh hưởng trực tiếp đến authentication và user access.
+
+(Tùy chọn) Insufficient memory allocation – tuy mức độ ưu tiên thấp hơn, nhưng vẫn cần theo dõi để tránh crash bất ngờ.*
 
 ---
 
@@ -218,4 +231,4 @@ Evaluate → Analyze → Improve → Augment benchmark → Repeat
 **Word-overlap heuristics trong lab có giới hạn gì? Nếu đưa hệ thống vào
 production, bạn sẽ thay hoặc bổ sung metric nào?**
 
-> *Câu trả lời:*
+> *Câu trả lời: Dễ bias theo reference. Không đánh giá tính chính xác ngữ nghĩa*
